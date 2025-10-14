@@ -1,4 +1,4 @@
-package proxy
+package main
 
 type loginRequest struct {
 	Identity string `json:"identity"` // username OR email
