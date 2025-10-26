@@ -1,12 +1,13 @@
 import { gql } from "../lib/api";
 import { useEffect, useState } from "react";
-import { ME, XP_TRANSACTIONS, OBJECT_BY_IDS as _OBJECT_BY_IDS } from "../graphql/queries"; // ensure the import name matches your file
+import { ME, XP_TRANSACTIONS, OBJECT_BY_IDS as _OBJECT_BY_IDS, RESULTS } from "../graphql/queries"; // ensure the import name matches your file
 import { useAuth } from "../auth/useAuth";
 import { messageFromError } from "../lib/errors";
 
 export type User = { id: number; login: string; firstName?: string; lastName?: string; email?: string };
 export type Tx = { id: number; amount: number; objectId: number; userId: number; createdAt: string; path: string };
 export type Obj = { id: number; name: string; type: string };
+export type Result = { id: number; grade: string; type: string; createdAt: string; path: string };
 
 export function useMe() {
   const { token } = useAuth();
@@ -74,4 +75,43 @@ export function useXpData() {
   }, [token]);
 
   return { txs, objects, loading, error };
+}
+
+
+export function usePassFailData() {
+  const { token } = useAuth();
+  const [passCount, setPassCount] = useState<number>(0);
+  const [failCount, setFailCount] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(Boolean(token));
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!token) return;
+    let mounted = true;
+    (async () => {
+      try {
+        setLoading(true);
+        const d = await gql<{ result: Result[] }>(token, RESULTS, { limit: 2000 });
+        if (!mounted) return;
+        let pass = 0, fail = 0;
+        for (const r of d.result) {
+              const grade = Number(r.grade);
+        if (grade === 1) pass++;
+        else if (grade === 0) fail++;
+      }
+        setPassCount(pass);
+        setFailCount(fail);
+      } catch (e: unknown) {
+        setError(messageFromError(e));
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [token]);
+
+  const total = passCount + failCount;
+  const passRate = total ? (passCount / total) : 0;
+
+  return { passCount, failCount, passRate, total, loading, error };
 }
