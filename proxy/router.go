@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// RegisterRoutes wires every HTTP endpoint exposed by the proxy.
 func RegisterRoutes(r *mux.Router) {
 	// CORS preflight (OPTIONS) is handled by handlers via withCORS + OPTIONS
 	r.HandleFunc("/auth/signin", authHandler()).Methods(http.MethodPost, http.MethodOptions)

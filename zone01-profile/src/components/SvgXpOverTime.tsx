@@ -4,6 +4,8 @@ import { scaleTime, scaleLinear, linePath, fmtDate } from "../lib/svg";
 
 type Props = { txs: Tx[]; width?: number; height?: number };
 
+// SvgXpOverTime plots cumulative XP so learners can reason about velocity and plateaus visually.
+// Interactivity stays lightweight (manual hover) to keep bundle size under control.
 export default function SvgXpOverTime({ txs, width = 760, height = 320 }: Props) {
   const pad = { t: 20, r: 20, b: 40, l: 48 };
   const innerW = width - pad.l - pad.r;
@@ -14,23 +16,23 @@ export default function SvgXpOverTime({ txs, width = 760, height = 320 }: Props)
     let sum = 0;
     return sorted.map((t) => {
       sum += t.amount;
-      return { date: new Date(t.createdAt), cum: sum };
+      return { date: new Date(t.createdAt), cum: sum }; // store running total for cumulative line
     });
   }, [txs]);
 
-  const [hover, setHover] = useState<{ x: number; y: number; label: string } | null>(null);
+  const [hover, setHover] = useState<{ x: number; y: number; label: string } | null>(null); // memoizes tooltip anchor so DOM stays minimal
 
   if (points.length === 0) return <svg width={width} height={height}><text x={16} y={24}>No XP yet</text></svg>;
 
   const x = scaleTime([points[0].date, points[points.length - 1].date], [0, innerW]);
   const y = scaleLinear([0, Math.max(...points.map((p) => p.cum))], [innerH, 0]);
-  const path = linePath(points.map((p) => ({ x: pad.l + x(p.date), y: pad.t + y(p.cum) })));
+  const path = linePath(points.map((p) => ({ x: pad.l + x(p.date), y: pad.t + y(p.cum) }))); // convert data into SVG path string
 
   // axis ticks (simple)
   const xticks = 6;
   const dates = Array.from({ length: xticks }, (_, i) =>
     new Date(points[0].date.getTime() + (i / (xticks - 1)) * (points[points.length - 1].date.getTime() - points[0].date.getTime()))
-  );
+  ); // simple evenly-spaced tick generator without external date libs
 
   const yticks = 5;
   const ymax = Math.max(...points.map((p) => p.cum));

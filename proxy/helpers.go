@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// withCORS mirrors the caller origin and configures minimal headers for browser requests.
 func withCORS(w http.ResponseWriter, r *http.Request) {
 	origin := r.Header.Get("Origin")
 	if origin == "" {
@@ -19,10 +20,12 @@ func withCORS(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 }
 
+// okJSON encodes the provided value and ignores serialization errors for simplicity.
 func okJSON(w http.ResponseWriter, v any) {
 	_ = json.NewEncoder(w).Encode(v)
 }
 
+// logRequest wraps a handler and emits a concise access log with latency.
 func logRequest(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
@@ -31,6 +34,7 @@ func logRequest(next http.Handler) http.Handler {
 	})
 }
 
+// getenv returns the environment value if it exists or a provided default.
 func getenv(key, def string) string {
 	if v := os.Getenv(key); v != "" {
 		return v
@@ -38,6 +42,7 @@ func getenv(key, def string) string {
 	return def
 }
 
+// withJSON sets the Content-Type header to JSON for downstream handlers.
 func withJSON(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 }

@@ -16,10 +16,21 @@ query ObjByIds($ids: [Int!]) {
 }
 `;
 
-export const RESULTS = `
-query MyResults($limit: Int = 2000) {
-  result(order_by: { createdAt: asc }, limit: $limit) {
-    id grade type createdAt path
+export const PROGRESS = `
+query MyProgress($limit: Int = 2000, $userId: Int!) {
+  progress(
+    order_by: [{ updatedAt: desc }, { createdAt: desc }]
+    limit: $limit
+    where: { userId: { _eq: $userId }, isDone: { _eq: true } }
+  ) {
+    id
+    grade
+    createdAt
+    updatedAt
+    path
+    objectId
+    object { id name type }
+    user { id login }
   }
 }
 `;

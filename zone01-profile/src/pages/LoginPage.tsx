@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useAuth } from "../auth/useAuth";
 import { messageFromError } from "../lib/errors";
 
+// LoginPage handles the full authentication flow (inputs, async submit, error surface) without
+// relying on a form library so bundle size stays tiny.
 export default function LoginPage() {
   const { login } = useAuth();
   const [identity, setIdentity] = useState("");
@@ -9,6 +11,7 @@ export default function LoginPage() {
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Handles the async login flow and normalizes errors to user-friendly strings.
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr(null); setLoading(true);
@@ -41,8 +44,9 @@ export default function LoginPage() {
             </label>
             <input type="password" className="input" value={password} onChange={(ev) => setPassword(ev.target.value)} />
           </div>
+          {/* Disable submit to avoid duplicate login calls while awaiting the server */}
           <button className="btn btn-primary" disabled={loading}>
-            {loading ? "Signing in…" : "Sign in"}
+            {loading ? "Signing in..." : "Sign in"}
           </button>
           {err && <p style={{ color: "var(--danger)" }}>{err}</p>}
         </form>

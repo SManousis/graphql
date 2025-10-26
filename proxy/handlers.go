@@ -10,10 +10,12 @@ import (
 	"time"
 )
 
+// Upstream endpoints can be configured via environment variables for multiple deployments.
 var zone01Base = getenv("ZONE01_BASE", "https://platform.zone01.gr")
 var signinPath = getenv("SIGNIN_PATH", "/api/auth/signin")
 var graphqlPath = getenv("GRAPHQL_PATH", "/api/graphql-engine/v1/graphql")
 
+// authHandler validates user credentials against Zone01 and returns the JWT from the upstream service.
 func authHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		withCORS(w, r)
@@ -84,6 +86,7 @@ func authHandler() http.HandlerFunc {
 	}
 }
 
+// refreshHandler keeps the session alive by returning a simple ok JSON response.
 func refreshHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		withCORS(w, r)
@@ -100,6 +103,7 @@ func refreshHandler() http.HandlerFunc {
 	}
 }
 
+// graphqlHandler proxies GraphQL POST requests and streams the upstream response.
 func graphqlHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		withCORS(w, r)
