@@ -49,7 +49,7 @@ export default function SvgXpOverTime({ txs, width = 760, height = 320 }: Props)
         return (
           <g key={i} transform={`translate(${xx},0)`}>
             <line y1={pad.t + innerH} y2={pad.t + innerH + 6} stroke="currentColor" />
-            <text y={pad.t + innerH + 20} textAnchor="middle" fontSize="10">{fmtDate(d)}</text>
+            <text y={pad.t + innerH + 20} textAnchor="middle" fontSize="10" fill="var(--text)">{fmtDate(d)}</text>
           </g>
         );
       })}
@@ -58,7 +58,7 @@ export default function SvgXpOverTime({ txs, width = 760, height = 320 }: Props)
         return (
           <g key={i} transform={`translate(0,${yy})`}>
             <line x1={pad.l - 6} x2={pad.l} stroke="currentColor" />
-            <text x={pad.l - 10} y={3} textAnchor="end" fontSize="10">{v}</text>
+            <text x={pad.l - 10} y={3} textAnchor="end" fontSize="10" fill="var(--text)">{v}</text>
             <line x1={pad.l} x2={pad.l + innerW} y1={0} y2={0} strokeOpacity={0.1} />
           </g>
         );

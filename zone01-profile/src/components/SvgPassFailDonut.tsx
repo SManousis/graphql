@@ -47,19 +47,19 @@ export default function SvgPassFailDonut({ pass, fail, width = 280, height = 220
       {/* labels (upright) */}
       <g transform={`translate(${(width - size) / 2}, ${(height - size) / 2})`}>
         {/* Central annotation doubles as both percentage and empty state */}
-        <text x={cx} y={cy - 8} textAnchor="middle" fontSize="18" fontWeight={600}>
+        <text x={cx} y={cy - 8} textAnchor="middle" fontSize="18" fill="var(--text)" fontWeight={600}>
           {total ? Math.round(rate * 100) : 0}%
         </text>
-        <text x={cx} y={cy + 14} textAnchor="middle" fontSize="12">Pass rate</text>
+        <text x={cx} y={cy + 14} textAnchor="middle" fontSize="12" fill="var(--text)">Pass rate</text>
 
         {/* Legend positions anchor to donut to remain aligned regardless of custom width/height */}
         <g transform={`translate(${cx - 60}, ${size - 12})`}>
           <rect width="10" height="10" rx="2" fill="#10b981" />
-          <text x={16} y={10} fontSize="12">Pass: {pass}</text>
+          <text x={16} y={10} fontSize="12" fill="var(--text)">Pass: {pass}</text>
         </g>
         <g transform={`translate(${cx + 30}, ${size - 12})`}>
           <rect width="10" height="10" rx="2" fill="#ef4444" />
-          <text x={16} y={10} fontSize="12">Fail: {fail}</text>
+          <text x={16} y={10} fontSize="12" fill="var(--text)">Fail: {fail}</text>
         </g>
       </g>
     </svg>

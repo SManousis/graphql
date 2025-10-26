@@ -33,7 +33,7 @@ export default function SvgXpByProject({ txs, objects, width = 760, height = 360
   const gap = (innerH - barH * rows.length) / Math.max(rows.length - 1, 1); // distributes leftover space evenly
 
   return (
-    <svg width={width} height={height}>
+    <svg width={width} height={height} style={{ color: "var(--text)" }}>
       {/* axes */}
       <line x1={pad.l} y1={pad.t + innerH} x2={pad.l + innerW} y2={pad.t + innerH} stroke="currentColor" />
       <line x1={pad.l} y1={pad.t} x2={pad.l} y2={pad.t + innerH} stroke="currentColor" />
@@ -42,10 +42,10 @@ export default function SvgXpByProject({ txs, objects, width = 760, height = 360
         const y = pad.t + i * (barH + gap);
         return (
           <g key={i} transform={`translate(${pad.l},${y})`}>
-            <rect width={x(r.xp)} height={barH} />
+            <rect width={x(r.xp)} height={barH} fill="var(--text)" />
             {/* Labels hug the bar so long titles remain readable even at small widths */}
-            <text x={-10} y={barH / 2 + 4} textAnchor="end" fontSize="12">{r.name}</text>
-            <text x={x(r.xp) + 6} y={barH / 2 + 4} fontSize="12">{r.xp}</text>
+            <text x={-10} y={barH / 2 + 4} textAnchor="end" fontSize="12" fill="var(--text)">{r.name}</text>
+            <text x={x(r.xp) + 6} y={barH / 2 + 4} fontSize="12" fill="var(--text)">{r.xp}</text>
           </g>
         );
       })}
