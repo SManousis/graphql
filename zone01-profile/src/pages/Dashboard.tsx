@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import  { useMemo } from "react";
 import { useMe, useXpData, usePassFailData, useRecentResults } from "../hooks/useGraph";
 import SvgXpOverTime from "../components/SvgXpOverTime";
 import SvgXpByProject from "../components/SvgXpByProject";

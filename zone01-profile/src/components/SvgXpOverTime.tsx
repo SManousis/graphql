@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import  { useMemo, useState } from "react";
 import type { Tx } from "../hooks/useGraph";
 import { scaleTime, scaleLinear, linePath, fmtDate } from "../lib/svg";
 

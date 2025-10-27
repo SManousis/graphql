@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import  { useMemo } from "react";
 import type { Tx, Obj } from "../hooks/useGraph";
 import { scaleLinear } from "../lib/svg";
 
