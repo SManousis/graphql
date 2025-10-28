@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -47,6 +48,7 @@ func authHandler() http.HandlerFunc {
 		client := &http.Client{Timeout: 15 * time.Second}
 		zResp, err := client.Do(zReq)
 		if err != nil {
+			log.Printf("auth signin proxy error: %v", err)
 			http.Error(w, "auth service unreachable", http.StatusBadGateway)
 			return
 		}
@@ -54,6 +56,7 @@ func authHandler() http.HandlerFunc {
 
 		body, _ := io.ReadAll(zResp.Body)
 		if zResp.StatusCode < 200 || zResp.StatusCode >= 300 {
+			log.Printf("auth signin upstream status=%d body=%q", zResp.StatusCode, string(body))
 			// avoid leaking server messages; keep it generic
 			http.Error(w, "invalid credentials", http.StatusUnauthorized)
 			return
@@ -138,6 +141,7 @@ func graphqlHandler() http.HandlerFunc {
 		client := &http.Client{Timeout: 30 * time.Second}
 		zResp, err := client.Do(zReq)
 		if err != nil {
+			log.Printf("graphql proxy error: %v", err)
 			http.Error(w, "graphql upstream unreachable", http.StatusBadGateway)
 			return
 		}
