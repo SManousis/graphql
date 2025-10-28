@@ -30,10 +30,12 @@ func authHandler() http.HandlerFunc {
 		}
 		var req loginRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			log.Printf("auth signin decode error: %v", err)
 			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}
 		if req.Identity == "" || req.Password == "" {
+			log.Printf("auth signin missing fields identity=%t password=%t", req.Identity != "", req.Password != "")
 			http.Error(w, "bad request", http.StatusBadRequest)
 			return
 		}

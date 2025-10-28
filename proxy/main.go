@@ -13,6 +13,7 @@ func main() {
 
 	// Boot router + middleware once and start listening.
 	router := mux.NewRouter()
+	router.StrictSlash(true)
 	RegisterRoutes(router)
 	log.Printf("listening on :%s", port)
 	if err := http.ListenAndServe(":"+port, logRequest(router)); err != nil {
